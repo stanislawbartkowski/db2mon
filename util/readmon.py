@@ -50,7 +50,7 @@ class DB2MON :
         self.para : str = None
         self.envname : str = envname
         
-    def toCVS(self,outfile: str, *args) :
+    def toCVS(self,outfile: str, args: List[any]) :
         logging.info("Writing {0} to {1}".format(self.para,self.fname))
         with open(outfile,"w") as f :
             f.write("\n")

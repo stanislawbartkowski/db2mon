@@ -46,8 +46,9 @@ OUTDIR="output"
 
 para : List[Tuple[str,str]] = [(PAR1,SHEET1),(PAR2,SHEET2),(PAR3,SHEET3),(PAR4,SHEET4),(PAR5,SHEET5),(PAR6,SHEET6),(PAR7,SHEET7),(PAR8,SHEET8),(PAR9,SHEET9),(PAR10,SHEET10)]
 
+files : List[Tuple[str,str]] = [(FNAME1,ENV1),(FNAME2,ENV2)]
 
-def createC(par:str, sheet:str) :
+def xxxcreateC(par:str, sheet:str) :
        
    M1 = DB2MON(FNAME1,ENV1)
    M1.read()
@@ -56,6 +57,19 @@ def createC(par:str, sheet:str) :
    M2.read()
    M2.tranformpar(par)
    M1.toCVS(os.path.join(OUTDIR,sheet),M2)
+   
+def createC(par:str, sheet:str) :
+   M1 : DB2MON = None
+   MLIST : List[DB2MON] = []
+   for fname,env in files :
+      M = DB2MON(fname,env)
+      M.read()
+      M.tranformpar(par)
+      if M1 is None : M1 = M
+      else: MLIST.append(M)
+      
+   M1.toCVS(os.path.join(OUTDIR,sheet),MLIST)
+
    
 def createA() :
    for par,sheet in para : createC(par,sheet)
