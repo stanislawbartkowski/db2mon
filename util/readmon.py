@@ -6,6 +6,7 @@ SEPA=" | "
 BETWEEN=1
 
 STMT="STMT_TEXT"
+BPNAME="BP_NAME"
 STMTCUT=40
 
 class MONELEM(NamedTuple) :
@@ -25,6 +26,11 @@ def transfortolist(l : str, labels: List[str]) -> List[str] :
         res = res[0:i]
         sta = l[b:b+STMTCUT]
         res.append(sta)
+        
+    if BPNAME in labels and len(res) == len(labels) + 1:
+        i : int = labels.index(BPNAME)
+        res[i] = res[i] + res[i+1]
+        res = res[0:i+1] + res[i+2:]
                 
     return res
     
@@ -113,7 +119,13 @@ class DB2MON :
                 assert(state == 2)
                 if len(l.strip()) != 0 :
                     values = transfortolist(l,labels)
-                    assert(len(values) == len(labels))
+                    if len(values) != len(labels) :
+                        logging.info(labels)
+                        logging.info(l)
+                        logging.info(values)
+                        msg : str = "Number of labels {0} does not match number of values {1}".format(len(labels),len(values))
+                        logging.critical(msg)
+                        raise Exception(msg)
                     logging.info("Read line with results")
                     vals.append(values)
                 else : 
