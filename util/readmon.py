@@ -33,7 +33,10 @@ def transfortolist(l : str, labels: List[str]) -> List[str] :
         res = res[0:i+1] + res[i+2:]
                 
     return res
-    
+
+# ---------------------
+# lines
+# ---------------------
 
 def writebetween(f) :
     for _ in range(BETWEEN) :
@@ -46,8 +49,39 @@ def writeempty(f,e : MONELEM) :
 def writevals(f,i:int,e : MONELEM) :
     for l in e.vals :
         f.write(SEPA + l[i])
+
+# --------------
+# columns
+# --------------  
+
+LEFTM=1
+
+def writeleft(f) :
+    for _ in range(LEFTM) :
+        f.write(SEPA)
+        
+def writeC(f,s):
+    f.write(s + SEPA)
     
- 
+def writenl(f) :
+    f.write("\n")    
+        
+def writelabels(f,e : MONELEM) :
+    writeleft(f)
+    for l in e.labels : writeC(f,l)
+    writenl(f)
+    
+def writevalscol(f,envname : str, e : MONELEM) :
+    writenl(f)
+    writeC(f,envname)
+    writenl(f)
+
+    for l in e.vals :
+        writeleft(f)
+        for v in l :
+            writeC(f,v)
+        writenl(f)
+
 class DB2MON : 
      
     def __init__(self,fname : str, envname:str) :
@@ -56,10 +90,18 @@ class DB2MON :
         self.para : str = None
         self.envname : str = envname
         
+    def toCVSCol(self,outfile: str, args: List[any]) :
+        logging.info("Writing {0} to {1}".format(self.para,self.fname))
+        with open(outfile,"w") as f :
+            writelabels(f,self.elem)
+            writevalscol(f,self.envname,self.elem)
+            for m in args :
+                writevalscol(f,m.envname,m.elem)
+        
     def toCVS(self,outfile: str, args: List[any]) :
         logging.info("Writing {0} to {1}".format(self.para,self.fname))
         with open(outfile,"w") as f :
-            f.write("\n")
+            writenl(f)
             
             f.write(SEPA+self.envname)
             writeempty(f,self.elem);            
@@ -78,7 +120,7 @@ class DB2MON :
                     writebetween(f)
                     writevals(f,i,k.elem)
                     
-                f.write("\n")
+                writenl(f)
         
         
     def read(self) :

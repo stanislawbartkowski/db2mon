@@ -50,7 +50,7 @@ para : List[Tuple[str,str]] = [(PAR1,SHEET1),(PAR2,SHEET2),(PAR3,SHEET3),(PAR4,S
 files1 : List[Tuple[str,str]] = [(FNAME1,ENV1),(FNAME2,ENV2)]
 
 
-MDIR="xxxx"
+MDIR="xxxxx"
 
 files2 : List[str] = ["db2mon2_120_1130.out","db2mon3_120_1140.out","db2mon4_120_1155.out","db2mon5_300_1220.out","db2mon6_300_1245.out", \
   "db2mon7_300_1310.out", "db2mon8_300_1340.out","db2mon9_300_1350.out","db2mon10_300_1425.out","db2mon11_300_1445.out", \
@@ -64,7 +64,8 @@ def xxxcreateC(par:str, sheet:str) :
    M2 = DB2MON(FNAME2,ENV2)
    M2.read()
    M2.tranformpar(par)
-   M1.toCVS(os.path.join(OUTDIR,sheet),M2)
+   #M1.toCVS(os.path.join(OUTDIR,sheet),M2)
+   M1.toCVSCol(os.path.join(OUTDIR,sheet),M2)
    
    
 def createC(par:str, sheet:str,files : List[Tuple[str,str]]) :
@@ -77,8 +78,8 @@ def createC(par:str, sheet:str,files : List[Tuple[str,str]]) :
       if M1 is None : M1 = M
       else: MLIST.append(M)
       
-   M1.toCVS(os.path.join(OUTDIR,sheet),MLIST)
-
+   M1.toCVSCol(os.path.join(OUTDIR,sheet),MLIST)
+   
    
 def createA(files : List[Tuple[str,str]]) :
    for par,sheet in para : createC(par,sheet,files)
@@ -96,8 +97,7 @@ def createAA(inputdir: str, fnames:List[str]) :
 
 def main():
    print("Hello") 
-#   createC(PAR4,SHEET4)
-   #createA(files1)
+#   createA(files1)
    createAA(MDIR,files2)
 
 if __name__ == "__main__":
